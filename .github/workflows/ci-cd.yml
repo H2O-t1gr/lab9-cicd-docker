@@ -24,7 +24,8 @@ jobs:
       - name: Check application
         run: |
           docker run -d --name lab9-test -p 3002:${CONTAINER_PORT} "$IMAGE"
-          RESPONSE=$(curl -fsS --retry 5 --retry-connrefused http://localhost:3002/)
+          sleep 3
+          RESPONSE=$(curl -fsS --retry 5 --retry-delay 2 --retry-all-errors http://localhost:3002/) || { docker logs lab9-test; exit 1; }
           echo "Response: $RESPONSE"
           echo "$RESPONSE" | grep -q "Lab9"
           docker rm -f lab9-test
